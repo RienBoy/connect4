@@ -1,8 +1,7 @@
+import random
+
 from blessed import Terminal
 from . import c4
-
-import sys
-import random
 
 t = Terminal()
 
@@ -23,17 +22,16 @@ def get_input(player):
     with t.cbreak():
         while True:
             key = t.inkey()
-            
             if key == '\x03': # Ctrl+C
                 raise KeyboardInterrupt
 
             if key.is_sequence and key.code == t.KEY_ENTER and col is not None:
                 if c4.put_disc(player, col):
                     break
-            
-            if not key.is_sequence and key in (str(x+1) for x in range(7)):
+
+            if not key.is_sequence and key in (str(x+1) for x in range(c4.COLUMNS)):
                 col = int(key)
-            
+
             if col is not None:
                 print(col, end="\b")
 
@@ -44,11 +42,9 @@ def print_game():
     print("=" * len(status_message))
     c4.print_board()
 
-        
+
 try:
-
     cur_player = random.randint(1, 2)
-
     status_message = f'{pcolor[cur_player](f"Player {cur_player}")} begins.'
 
     with t.location():
