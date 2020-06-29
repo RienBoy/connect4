@@ -50,4 +50,4 @@ Different playstyles of this game:
 
 ## Licensing
 
-"The code in this project is licensed under The Unlicense."
+The code in this project is licensed under The Unlicense.
