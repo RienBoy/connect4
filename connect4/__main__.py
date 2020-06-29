@@ -39,13 +39,14 @@ def get_input(player):
 def print_game():
     print(t.clear_eos)
     print(status_message)
-    print("=" * len(status_message))
+    print("=" * len(status_message_nf))
     c4.print_board()
 
 
 try:
     cur_player = random.randint(1, 2)
     status_message = f'{pcolor[cur_player](f"Player {cur_player}")} begins.'
+    status_message_nf = f"Player {cur_player} begins."
 
     with t.location():
         print_game()
@@ -55,10 +56,12 @@ try:
         cur_player = 1 - (cur_player-1) + 1
         with t.location():
             status_message = f'{pcolor[cur_player](f"Player {cur_player}")}\'s turn'
+            status_message_nf = f"Player {cur_player}\'s turn"
             print_game()
             get_input(cur_player)
 
     status_message = f'{t.bold(pcolor[cur_player](f"Player {cur_player}"))} won the game!'
+    status_message_nf = f'Player {cur_player} won the game!'
     print_game()
     print()
 

@@ -47,7 +47,7 @@ def check_win(player):
 
 
 def print_board():
-    print(t.bold("1 2 3 4 5 6 7 "))
+    print(t.bold_underline_yellow("1 2 3 4 5 6 7"))
     for row in board:
         for cell in row:
             print(signs[cell], end=" ")
