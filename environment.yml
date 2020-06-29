@@ -1,0 +1,5 @@
+name: connect4
+dependencies:
+ - python=3.8
+ - pip:
+   - blessed

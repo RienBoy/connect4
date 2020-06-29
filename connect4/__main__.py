@@ -6,7 +6,7 @@ import random
 import re
 
 from blessed import Terminal
-from . import c4
+from . import c4    # If PyLint shows an error here, don't fix it, it works. PyLint is wrong.
 
 t = Terminal()
 
