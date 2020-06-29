@@ -18,16 +18,17 @@ t = Terminal()
 # Board
 board = [[0 for column in range(COLUMNS)] for row in range(ROWS)]
 # Display characters
-signs = {
-    0: t.white('O'),
-    1: t.blue('O'),
-    2: t.red('O')
+pcolor = {
+    0: lambda x: t.white(x),
+    1: lambda x: t.blue(x),
+    2: lambda x: t.red(x)
 }
+signs = {key: color('O') for key, color in pcolor.items()}
 
 
-def put_disc(player, column):
+def put_disc(player, column, board=board):
     """
-    Puts a disc of player `player`in column `column`.
+    Puts a disc of player `player` in column `column`.
     Returns `False` if the column is full.
     """
     row = -1
@@ -47,8 +48,9 @@ def check_win(player):
         for dx, dy in ((1, -1), (1, 0), (1, 1), (0, 1)):
             count = 0
             for scale in range(4):
-                if (row + dx*scale >= ROWS or column + dy*scale >= COLUMNS): continue
-                if board[row + dx * scale][column + dy * scale] == player:
+                if (not (0 <= row + dy*scale < ROWS) or not (0 <= column + dx*scale < COLUMNS)): 
+                    continue
+                if board[row + dy * scale][column + dx * scale] == player:
                     count += 1
                     if count == 4:
                         return True
@@ -56,7 +58,8 @@ def check_win(player):
 
     for row in range(ROWS):
         for column in range(COLUMNS):
-            if board[row][column] != player: continue
+            if board[row][column] != player: 
+                continue
             if check_pos(row, column):
                 return True
     return False
