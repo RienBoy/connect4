@@ -34,16 +34,19 @@ This will create and activate the environment.
 ## Running the game
 
 To run the game type
-```python -m connect4```
+
+```
+python -m connect4
+```
 
 To play game simply type the number of the column you want the put the disc in.
 
 ## Features
 
 Different playstyles of this game:
-[x] Play locally against another player
-[ ] Play locally against a bot
-[ ] Play online against another player
+ - [x] Play locally against another player
+ - [ ] Play locally against a bot
+ - [ ] Play online against another player
 
 ## Licensing
 
