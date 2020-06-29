@@ -1,9 +1,19 @@
+"""
+Implements a player to play connect4 with.
+"""
 from blessed import Terminal
 from . import c4
 
 
 class Player:
+    """Represents a Player"""
     def __init__(self, name, number):
+        """Initializes the Player.
+
+        Arguments:
+         - name: the name of the player
+         - number: identifying number of the player
+        """
         self.color = c4.pcolor[number]
         self.name = name
         self.number = number
