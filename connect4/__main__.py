@@ -2,11 +2,11 @@
 Main entry in a connect 4 game.
 Handles the printing, input and player turns.
 """
-import random
 import re
 
 from blessed import Terminal
 from . import c4
+print('test')
 from .bot import Bot
 from .player import Player
 
@@ -79,7 +79,7 @@ def run_game():
 try:
     game = c4.Connect4Game(
         Player('Player 1'),
-        Player('Player 2')
+        Bot(0)
     )
     run_game()
 except KeyboardInterrupt:
