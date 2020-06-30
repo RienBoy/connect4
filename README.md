@@ -5,8 +5,7 @@ This is a personal implementation of the connect 4 game.
 This is made in Python3 and played in the terminal.
 
 ## TODO
- - Fix difficulty of Bot:
-    Higher difficulty makes Bot dumber because he looks too far into the future and puts no importance to near future stuff.
+ - Fix difficulty of Bot, maybe change the whole algorithm
  - Give name to Bot
  - Add cmd line options to decide whether to play locally or with Bot on set difficulty
  - Give players ability to give themselves a name through cmd line options

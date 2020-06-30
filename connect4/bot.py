@@ -22,18 +22,19 @@ class Bot:
         self.difficulty = difficulty
         self.number = number
         self.color = c4.pcolor[number]
+        self.opponent = 1 - (self.number - 1) + 1
     
 
     def do_turn(self):
         """Executes a turn for this Bot"""
-        chances = self.calculate_chances(0)
+        chances = self.calculate_chances(0, self.board)
         max_chances = [i for i, v in enumerate(chances) if v == max(chances)]
         choice = random.choice(max_chances) + 1
         c4.put_disc(self.number, choice)
         return choice
     
 
-    def calculate_chances(self, level):
+    def calculate_chances(self, level, board):
         """
         Calculate the chances of each column to win the game if Bot puts a disc there.
 
@@ -41,15 +42,20 @@ class Bot:
          - level: the depth level in which it calculates the chances
         """
         chances = []
-        for col in range(c4.COLUMNS):
+        for col in range(1, c4.COLUMNS + 1):
+            test_board_win = deepcopy(board)
+            test_board_lose = deepcopy(board)
+            if not c4.put_disc(self.number, col, test_board_win):
+                continue
+            c4.put_disc(self.opponent, col, test_board_lose)
             if level == self.difficulty:
-                chances.append(self.longest_streak(col+1))
+                chances.append(0.6 * self.longest_streak(col, self.number, test_board_win) + 0.4 * self.longest_streak(col, self.opponent, test_board_lose))
             else:
-                chances.append(mean(self.calculate_chances(level+1)))
+                chances.append(0.6 * mean(self.calculate_chances(level+1, test_board_win)) + 0.4 * mean(self.calculate_chances(level+1, test_board_lose)))
         return chances
 
 
-    def longest_streak(self, col):
+    def longest_streak(self, col, player, board):
         """
         Calculates the longest streak you'll have if you'll put a disc in that position
 
@@ -57,18 +63,15 @@ class Bot:
          - col: the column to test
         """
         max_streak = 0
-        for player in (2, 1): # win first, lose second
-            test_board = deepcopy(self.board)
-            c4.put_disc(player, col, test_board)
-            for row in range(c4.ROWS):
-                for column in range(c4.COLUMNS):
-                    if test_board[row][column] != player:
-                        continue
-                    for dx, dy in ((1, -1), (1, 0), (1, 1), (0, 1)):
-                        new_streak = self.streak(player, test_board, row, column, dx, dy)
-                        max_streak = max_streak if max_streak >= new_streak else new_streak
-                        if max_streak >= 4:
-                            return max_streak # let's cut it short
+        for row in range(c4.ROWS):
+            for column in range(c4.COLUMNS):
+                if board[row][column] != player:
+                    continue
+                for dx, dy in ((1, -1), (1, 0), (1, 1), (0, 1)):
+                    new_streak = self.streak(player, board, row, column, dx, dy)
+                    max_streak = max_streak if max_streak >= new_streak else new_streak
+                    if max_streak >= 4:
+                        return max_streak # let's cut it short
         return max_streak
             
 
