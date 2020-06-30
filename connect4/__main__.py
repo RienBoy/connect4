@@ -6,7 +6,7 @@ import random
 import re
 
 from blessed import Terminal
-from . import c4    # If PyLint shows an error here, don't fix it, it works. PyLint is wrong.
+from . import c4
 from .bot import Bot
 from .player import Player
 
@@ -15,10 +15,9 @@ t = Terminal()
 with t.location():
     print('Starting game...')
 
+game = None
 choice_message = ''
 status_message, status_message_nf = None, None
-players = []
-cur_player = None
 
 
 def set_choice_message(player, choice):
@@ -52,40 +51,36 @@ def print_game():
     print(choice_message)
     print(status_message)
     print("=" * len(status_message_nf))
-    c4.print_board()
+    print(game)
 
 
 def run_game():
     """Runs the game"""
-    global cur_player
-    set_status_message(f'{players[cur_player]} begins.')
+    set_status_message(f'{game.get_current_player()} begins.')
 
     # First turn
     with t.location(): 
         print_game()
-        choice = players[cur_player].do_turn()
-        set_choice_message(players[cur_player], choice)
+        set_choice_message(*game.turn())
 
     # As long as the game isn't won
-    while not c4.check_win(cur_player + 1):
-        cur_player = 1 - cur_player
-        set_status_message(f'{players[cur_player]}\'s turn')
+    while not game.check_win():
+        set_status_message(f'{game.get_current_player()}\'s turn')
         with t.location():
             print_game()
-            choice = players[cur_player].do_turn()
-            set_choice_message(players[cur_player], choice)
+            set_choice_message(*game.turn())
 
     # Game is won
-    set_status_message(f'{t.bold(str(players[cur_player]))} won the game!')
+    set_status_message(f'{t.bold(str(game.get_previous_player()))} won the game!')
     print_game()
     print()
 
 
 try:
-    players.append(Player('Player 1', 1))
-    players.append(Bot(c4.board, 0, 2))
-    #players.append(Player('Player 2', 2))
-    cur_player = random.randint(0, 1)
+    game = c4.Connect4Game(
+        Player('Player 1'),
+        Player('Player 2')
+    )
     run_game()
 except KeyboardInterrupt:
     # Game is interrupted

@@ -10,7 +10,7 @@ from . import c4
 
 class Bot:
     """Represents a Bot that can play connect4"""
-    def __init__(self, board, difficulty, number):
+    def __init__(self, board, difficulty):
         """Initializes the Bot
 
         Arguments:
@@ -20,17 +20,22 @@ class Bot:
         """
         self.board = board
         self.difficulty = difficulty
-        self.number = number
+        self.number = None
         self.color = c4.pcolor[number]
-        self.opponent = 1 - (self.number - 1) + 1
-    
+        self.opponent = 1 - self.number
 
-    def do_turn(self):
+
+    def give_number(self, number):
+        """Sets the identification number of the bot."""
+        self.number = number
+
+
+    def do_turn(self, board):
         """Executes a turn for this Bot"""
-        chances = self.calculate_chances(0, self.board)
+        chances = self.calculate_chances(0, board)
         max_chances = [i for i, v in enumerate(chances) if v == max(chances)]
         choice = random.choice(max_chances) + 1
-        c4.put_disc(self.number, choice)
+        c4.put_disc(board, self.number + 1, choice)
         return choice
     
 
@@ -45,9 +50,9 @@ class Bot:
         for col in range(1, c4.COLUMNS + 1):
             test_board_win = deepcopy(board)
             test_board_lose = deepcopy(board)
-            if not c4.put_disc(self.number, col, test_board_win):
+            if not c4.put_disc(test_board_win, self.number + 1, col):
                 continue
-            c4.put_disc(self.opponent, col, test_board_lose)
+            c4.put_disc(test_board_lose, self.opponent + 1, col)
             if level == self.difficulty:
                 chances.append(0.6 * self.longest_streak(col, self.number, test_board_win) + 0.4 * self.longest_streak(col, self.opponent, test_board_lose))
             else:

@@ -7,20 +7,26 @@ from . import c4
 
 class Player:
     """Represents a Player"""
-    def __init__(self, name, number):
+    def __init__(self, name):
         """Initializes the Player.
 
         Arguments:
          - name: the name of the player
          - number: identifying number of the player
         """
-        self.color = c4.pcolor[number]
+        self.color = None
         self.name = name
-        self.number = number
+        self.number = None
         self.t = Terminal()
-    
 
-    def do_turn(self):
+
+    def give_number(self, number):
+        """Sets the identification number of the player."""
+        self.number = number
+        self.color = c4.pcolor[number + 1]
+
+
+    def do_turn(self, board):
         """Gets the input from player `player`and puts a disc."""
         col = None
         print(f'{self.color(f"{self.name}")}>>', end="")
@@ -32,7 +38,7 @@ class Player:
                     raise KeyboardInterrupt
 
                 if key.is_sequence and key.code == self.t.KEY_ENTER and col is not None:
-                    if c4.put_disc(self.number, col):
+                    if c4.put_disc(board, self.number + 1, col):
                         return col
 
                 if not key.is_sequence and key in (str(x+1) for x in range(c4.COLUMNS)):
