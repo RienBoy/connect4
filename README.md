@@ -4,12 +4,6 @@
 This is a personal implementation of the connect 4 game.
 This is made in Python3 and played in the terminal.
 
-## TODO
- - Fix difficulty of Bot, does the algorithm work?
- - Give name to Bot
- - Add cmd line options to decide whether to play locally or with Bot on set difficulty
- - Give players ability to give themselves a name through cmd line options
-
 ## Installing / Getting started
 
 To run this you'll need [Python3](www.python.org) installed and the dependencies in `requirements.txt`.
@@ -44,8 +38,13 @@ To run the game type
 ```
 python -m connect4
 ```
+or run
+```
+python -m connect4 -h
+```
+to see extra options.
 
-To play game simply type the number of the column you want the put the disc in.
+To play game simply type the number of the column you want the put the disc in and press enter.
 
 ## Features
 
