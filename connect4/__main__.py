@@ -2,13 +2,19 @@
 Main entry in a connect 4 game.
 Handles the printing, input and player turns.
 """
+import argparse
 import re
 
 from blessed import Terminal
 from . import c4
-print('test')
-from .bot import Bot
+from .bot import Quatro
 from .player import Player
+
+parser = argparse.ArgumentParser(description='Play some Connect 4 in the terminal.')
+parser.add_argument('player1', nargs='?', default='Player 1', help='Name for  player 1')
+parser.add_argument('player2', nargs='?', default='Player 2', help='Name for  player 2')
+parser.add_argument('--bot', '-b', type=int, choices=list(range(1)), default=None, help='Adds a bot with given difficulty')
+args = parser.parse_args()
 
 t = Terminal()
 
@@ -78,8 +84,8 @@ def run_game():
 
 try:
     game = c4.Connect4Game(
-        Player('Player 1'),
-        Bot(0)
+        Player(args.player1),
+        Quatro(args.bot) if args.bot is not None else Player(args.player2)
     )
     run_game()
 except KeyboardInterrupt:

@@ -8,7 +8,7 @@ from statistics import mean
 from . import c4
 
 
-class Bot:
+class Quatro:
     """Represents a Bot that can play connect4"""
     def __init__(self, difficulty):
         """Initializes the Bot
@@ -22,6 +22,7 @@ class Bot:
         self.number = None
         self.color = None
         self.opponent = None
+        self.name = 'Quatro'
 
 
     def give_number(self, number):
@@ -83,8 +84,8 @@ class Bot:
 
 
     def __str__(self):
-        return self.color('Bot')
+        return self.color(self.name)
 
 
     def __repr__(self):
-        return self.color(f'Bot({self.number})')
+        return self.color(self.name + f'({self.number})')

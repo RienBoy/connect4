@@ -8,7 +8,6 @@ c4 implements function for the main mechanics of the game:
 import random
 
 from blessed import Terminal
-from IPython import embed
 
 # CONSTANTS
 COLUMNS = 7
