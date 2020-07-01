@@ -57,10 +57,9 @@ def streak(board, player, row, column, dx, dy):
     """Calculates the streak of `player` on `board` starting from [`row`, `column`] in direction (`dx`, `dy`)."""
     scale = 0
     while True:
-        try:
-            if board[row + dy * scale][column + dx * scale] != player:
-                return scale
-        except IndexError:
+        if not (0 <= row + dy * scale < ROWS and 0 <= column + dx * scale < COLUMNS):
+            return scale
+        if board[row + dy * scale][column + dx * scale] != player:
             return scale
         scale += 1
 

@@ -4,6 +4,8 @@ Implements a player to play connect4 with.
 from blessed import Terminal
 from . import c4
 
+from time import sleep
+
 
 class Player:
     """Represents a Player"""
@@ -29,7 +31,7 @@ class Player:
     def do_turn(self, board):
         """Gets the input from player `player`and puts a disc."""
         col = None
-        print(f'{self.color(f"{self.name}")}>>', end="")
+        print(f'{self}>>', end="", flush=True)
 
         with self.t.cbreak():
             while True:
@@ -45,7 +47,7 @@ class Player:
                     col = int(key)
 
                 if col is not None:
-                    print(col, end="\b")
+                    print(col, end="\b", flush=True)
 
 
     def __str__(self):
