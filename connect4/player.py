@@ -56,3 +56,38 @@ class Player:
 
     def __repr__(self):
         return self.color(f'{self.name}({self.number})')
+
+
+class LocalPlayer(Player):
+    def __init__(name):
+        # Setup the connection
+
+        super().__init__(name)
+
+
+    def do_turn(self, board):
+        # do turn
+        choice = super().do_turn(board)
+        # send choice to remote
+
+        # return choice
+        return choice
+
+
+class RemotePlayer(Player):
+    def __init__(self, sockip=None):
+        # Setup the connection
+        name = NotImplemented
+        
+        super().__init__(name)
+
+
+    def do_turn(self, board):
+        # Receive choice from other player
+        choice = NotImplemented
+
+        # Apply choice
+        c4.put_disc(board, self.number, choice)
+
+        # Return choice
+        return choice

@@ -13,7 +13,10 @@ from .player import Player
 parser = argparse.ArgumentParser(description='Play some Connect 4 in the terminal.')
 parser.add_argument('player1', nargs='?', default='Player 1', help='Optional name for  player 1')
 parser.add_argument('player2', nargs='?', default='Player 2', help='Optional name for  player 2')
-parser.add_argument('--bot', '-b', type=int, choices=list(range(1)), default=None, help='Adds a bot with given difficulty')
+parser.add_mutually_exclusive_group()
+group.add_argument('--bot', '-b', type=int, choices=list(range(1)), default=None, help='Adds a bot with given difficulty')
+group.add_argument('--host', '-h', action='store_true', help='Host a game of Connect 4')
+group.add_argument('--join', '-j', help='Join a game of connect 4')
 args = parser.parse_args()
 
 t = Terminal()
@@ -83,10 +86,21 @@ def run_game():
 
 
 try:
-    game = c4.Connect4Game(
-        Player(args.player1),
-        Quatro(args.bot) if args.bot is not None else Player(args.player2)
-    )
+    if args.host:
+        game = c4.Connect4Game(
+            LocalPlayer(args.player1),
+            RemotePlayer()
+        )
+    elif args.join is not None:
+        game = c4.Connect4Game(
+            RemotePlayer(),
+            LocalPlayer(args.player1)
+        )
+    else:
+        game = c4.Connect4Game(
+            Player(args.player1),
+            Quatro(args.bot) if args.bot is not None else Player(args.player2)
+        )
     run_game()
 except KeyboardInterrupt:
     # Game is interrupted
