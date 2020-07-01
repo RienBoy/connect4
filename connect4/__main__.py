@@ -2,25 +2,34 @@
 Main entry in a connect 4 game.
 Handles the printing, input and player turns.
 """
-import random
+import argparse
 import re
 
 from blessed import Terminal
-from . import c4    # If PyLint shows an error here, don't fix it, it works. PyLint is wrong.
+from . import c4
+from .bot import Quatro
+from .player import Player
+
+parser = argparse.ArgumentParser(description='Play some Connect 4 in the terminal.')
+parser.add_argument('player1', nargs='?', default='Player 1', help='Optional name for  player 1')
+parser.add_argument('player2', nargs='?', default='Player 2', help='Optional name for  player 2')
+parser.add_argument('--bot', '-b', type=int, choices=list(range(1)), default=None, help='Adds a bot with given difficulty')
+args = parser.parse_args()
 
 t = Terminal()
 
 with t.location():
     print('Starting game...')
 
-
-pcolor = {
-    1: t.blue,
-    2: t.red
-}
-
+game = None
+choice_message = ''
 status_message, status_message_nf = None, None
-cur_player = None
+
+
+def set_choice_message(player, choice):
+    """Sets the global `choice_message`"""
+    global choice_message
+    choice_message = f'{player} chose {choice}.'
 
 
 def set_status_message(msg):
@@ -42,61 +51,42 @@ def set_status_message(msg):
     status_message_nf = ansi_escape.sub('', msg)
 
 
-def get_input(player):
-    """Gets the input from player `player`and puts a disc."""
-    col = None
-    print(f'{pcolor[player](f"P{player}")}>>', end="")
-
-    with t.cbreak():
-        while True:
-            key = t.inkey()
-            if key == '\x03': # Ctrl+C
-                raise KeyboardInterrupt
-
-            if key.is_sequence and key.code == t.KEY_ENTER and col is not None:
-                if c4.put_disc(player, col):
-                    break
-
-            if not key.is_sequence and key in (str(x+1) for x in range(c4.COLUMNS)):
-                col = int(key)
-
-            if col is not None:
-                print(col, end="\b")
-
-
 def print_game():
     """Prints a game state."""
     print(t.clear_eos)
+    print(choice_message)
     print(status_message)
     print("=" * len(status_message_nf))
-    c4.print_board()
+    print(game)
 
 
 def run_game():
     """Runs the game"""
-    cur_player = random.randint(1, 2)  # Choose starting player
-    set_status_message(f'{pcolor[cur_player](f"Player {cur_player}")} begins.')
+    set_status_message(f'{game.get_current_player()} begins.')
 
     # First turn
     with t.location(): 
         print_game()
-        get_input(cur_player)
+        set_choice_message(*game.turn())
 
     # As long as the game isn't won
-    while not c4.check_win(cur_player):
-        cur_player = 1 - (cur_player-1) + 1
-        set_status_message(f'{pcolor[cur_player](f"Player {cur_player}")}\'s turn')
+    while not game.check_win():
+        set_status_message(f'{game.get_current_player()}\'s turn')
         with t.location():
             print_game()
-            get_input(cur_player)
+            set_choice_message(*game.turn())
 
     # Game is won
-    set_status_message(f'{t.bold(pcolor[cur_player](f"Player {cur_player}"))} won the game!')
+    set_status_message(f'{t.bold(str(game.get_previous_player()))} won the game!')
     print_game()
     print()
 
 
 try:
+    game = c4.Connect4Game(
+        Player(args.player1),
+        Quatro(args.bot) if args.bot is not None else Player(args.player2)
+    )
     run_game()
 except KeyboardInterrupt:
     # Game is interrupted

@@ -38,14 +38,19 @@ To run the game type
 ```
 python -m connect4
 ```
+or run
+```
+python -m connect4 -h
+```
+to see extra options.
 
-To play game simply type the number of the column you want the put the disc in.
+To play game simply type the number of the column you want the put the disc in and press enter.
 
 ## Features
 
 Different playstyles of this game:
  - [x] Play locally against another player
- - [ ] Play locally against a bot
+ - [x] Play locally against a bot
  - [ ] Play online against another player
 
 ## Licensing
