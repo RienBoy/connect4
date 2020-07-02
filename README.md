@@ -51,7 +51,12 @@ To play game simply type the number of the column you want the put the disc in a
 Different playstyles of this game:
  - [x] Play locally against another player
  - [x] Play locally against a bot
- - [ ] Play online against another player
+ - [x] Play online against another player
+
+### Playing online
+
+Playing online hasn't been fully tested and may run into some problems with [NAT](https://en.wikipedia.org/wiki/Network_address_translation).
+If you want to test it and maybe solve this, please do.
 
 ## Licensing
 
