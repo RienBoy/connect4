@@ -62,7 +62,7 @@ class Player:
 
 
 class LocalPlayer(Player):
-    def __init__(self, name, selfip):
+    def __init__(self, name, selfip=""):
         # Setup the connection
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.bind((selfip, 4445))
@@ -89,12 +89,12 @@ class LocalPlayer(Player):
 
 
 class RemotePlayer(Player):
-    def __init__(self, selfip):
+    def __init__(self, selfip=""):
         # Setup the connection
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.bind((selfip, 4444))
         self.s.listen()
-        print(f'Listening on {selfip}')
+        print(f'Listening on {selfip if selfip else socket.gethostbyname(socket.gethostname())}')
         
         super().__init__('Remote player')
 
