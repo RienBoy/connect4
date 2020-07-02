@@ -1,6 +1,9 @@
 """
 Implements a player to play connect4 with.
 """
+import socket
+import pickle
+
 from blessed import Terminal
 from . import c4
 
@@ -59,35 +62,60 @@ class Player:
 
 
 class LocalPlayer(Player):
-    def __init__(name):
+    def __init__(self, name, selfip):
         # Setup the connection
-
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.bind((selfip, 4445))
         super().__init__(name)
+
+
+    def connect(self, conn, starting_player=None):
+        self.s.connect((conn, 4444))
+        self.s.sendall(pickle.dumps([self.name, starting_player]))
 
 
     def do_turn(self, board):
         # do turn
         choice = super().do_turn(board)
         # send choice to remote
+        self.s.sendall(pickle.dumps(choice))
 
         # return choice
         return choice
 
 
+    def close(self):
+        self.s.close()
+
+
 class RemotePlayer(Player):
-    def __init__(self, sockip=None):
+    def __init__(self, selfip):
         # Setup the connection
-        name = NotImplemented
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.bind((selfip, 4444))
+        self.s.listen()
+        print(f'Listening on {selfip}')
         
-        super().__init__(name)
+        super().__init__('Remote player')
+
+
+    def accept(self):
+        (self.conn, addr) = self.s.accept()
+        (self.name, starting_player) = pickle.loads(self.conn.recv(1024))
+        return addr[0], starting_player
 
 
     def do_turn(self, board):
         # Receive choice from other player
-        choice = NotImplemented
+        choice = pickle.loads(self.conn.recv(1024))
 
         # Apply choice
-        c4.put_disc(board, self.number, choice)
+        c4.put_disc(board, self.number + 1, choice)
 
         # Return choice
         return choice
+
+
+    def close(self):
+        self.conn.shutdown(socket.SHUT_RDWR)
+        self.s.close()

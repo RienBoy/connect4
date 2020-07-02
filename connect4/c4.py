@@ -65,7 +65,7 @@ def streak(board, player, row, column, dx, dy):
 
 class Connect4Game:
     """Implements the functionalities and keeps track of a game of connect 4."""
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, starting_player=None):
         """
         Initializes a game.
         
@@ -78,7 +78,8 @@ class Connect4Game:
         player1.give_number(0)
         player2.give_number(1)
         self.players = (player1, player2)
-        self.cur_player = random.randint(0, 1)
+        self.cur_player = random.randint(0, 1) if starting_player is None else starting_player
+
 
 
     def __str__(self):
